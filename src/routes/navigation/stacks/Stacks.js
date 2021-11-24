@@ -1,11 +1,15 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { colors } from 'theme'
-import Home from 'scenes/home'
-import Profile from 'scenes/profile'
 import Details from 'scenes/details'
 import HeaderLeft from './HeaderLeft'
 import HeaderTitle from './HeaderTitle'
+import Home from 'scenes/home'
+import Profile from 'scenes/profile'
+import History from 'scenes/history'
+
+// tab navigators
+import { HomeTabNavigator, ProfileTabNavigator } from '../tabs'
 
 // ------------------------------------
 // Constants
@@ -23,7 +27,7 @@ const navigationProps = {
 // Navigators
 // ------------------------------------
 
-export const HomeNavigator = () => (
+export const HomeStackNavigator = () => (
   <Stack.Navigator
     initialRouteName="Home"
     headerMode="screen"
@@ -41,16 +45,39 @@ export const HomeNavigator = () => (
     <Stack.Screen
       name="Details"
       component={Details}
-      options={({ navigation }) => ({
-        title: 'Home',
-        headerLeft: () => <HeaderLeft navigation={navigation} />,
-        headerTitle: () => <HeaderTitle />,
-      })}
+      options={{
+        title: 'Details',
+      }}
     />
   </Stack.Navigator>
 )
 
-export const ProfileNavigator = () => (
+export const HistoryStackNavigator = () => (
+  <Stack.Navigator
+    initialRouteName="History"
+    headerMode="screen"
+    screenOptions={navigationProps}
+  >
+    <Stack.Screen
+      name="History"
+      component={History}
+      options={({ navigation }) => ({
+        title: 'History',
+        headerLeft: () => <HeaderLeft navigation={navigation} />,
+        headerTitle: () => <HeaderTitle />,
+      })}
+    />
+    <Stack.Screen
+      name="Details"
+      component={Details}
+      options={{
+        title: 'Details',
+      }}
+    />
+  </Stack.Navigator>
+)
+
+export const ProfileStackNavigator = () => (
   <Stack.Navigator
     initialRouteName="Profile"
     headerMode="screen"
@@ -58,7 +85,7 @@ export const ProfileNavigator = () => (
   >
     <Stack.Screen
       name="Profile"
-      component={Profile}
+      component={ProfileTabNavigator}
       options={({ navigation }) => ({
         title: 'Profile',
         headerLeft: () => <HeaderLeft navigation={navigation} />,

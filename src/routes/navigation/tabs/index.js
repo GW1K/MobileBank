@@ -1,3 +1,3 @@
-import Tabs from './Tabs'
+import { HomeTabNavigator, ProfileTabNavigator } from './Tabs'
 
-export default Tabs
+export { HomeTabNavigator, ProfileTabNavigator }
