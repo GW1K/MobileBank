@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  StyleSheet, Text, View, StatusBar,
-} from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import Button from 'components/Button'
 import { colors } from 'theme'
+import { Row, Circle, Box } from 'native-base'
 
 const styles = StyleSheet.create({
   root: {
@@ -16,13 +15,74 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 10,
   },
 })
 
 const Home = ({ navigation }) => (
-  <View style={styles.root}>
-    <StatusBar barStyle="light-content" />
+  <Row style={styles.root}>
+    <Row space="md">
+      <Circle size={180} bg="blue.400">
+        <Box
+          _text={{
+            fontWeight: 'bold',
+            fontSize: '2xl',
+            color: 'white',
+          }}
+        >
+          Account balance
+        </Box>
+        <Box
+          _text={{
+            fontWeight: 'bold',
+            fontSize: 'xl',
+            color: 'white',
+          }}
+        >
+          120,00 PLN
+        </Box>
+      </Circle>
+      <Circle size={160} bg="green.500">
+        <Box
+          _text={{
+            fontWeight: 'bold',
+            fontSize: '2xl',
+            color: 'white',
+          }}
+        >
+          Savings
+        </Box>
+        <Box
+          _text={{
+            fontWeight: 'bold',
+            fontSize: 'xl',
+            color: 'white',
+          }}
+        >
+          50,00 PLN
+        </Box>
+      </Circle>
+    </Row>
+    <Circle size={150} bg="amber.400">
+      <Box
+        _text={{
+          fontWeight: 'bold',
+          fontSize: '2xl',
+          color: 'white',
+        }}
+      >
+        Credit cards
+      </Box>
+      <Box
+        _text={{
+          fontWeight: 'bold',
+          fontSize: 'xl',
+          color: 'white',
+        }}
+      >
+        2
+      </Box>
+    </Circle>
     <Text style={styles.title}>Home</Text>
     <Button
       title="Go to Details"
@@ -32,7 +92,7 @@ const Home = ({ navigation }) => (
         navigation.navigate('Details', { from: 'Home' })
       }}
     />
-  </View>
+  </Row>
 )
 
 Home.propTypes = {
