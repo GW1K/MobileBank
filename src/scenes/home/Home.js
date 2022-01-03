@@ -1,9 +1,68 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text } from 'react-native'
-import Button from 'components/Button'
 import { colors } from 'theme'
-import { Row, Circle, Box } from 'native-base'
+import { Pressable, Row, Circle, Box } from 'native-base'
+
+const Home = ({ navigation }) => {
+  return (
+    <Row style={styles.root}>
+      <Row space="md">
+        <Pressable>
+          {({ isPressed }) => {
+            return (
+              <Circle
+                size={180}
+                bg={isPressed ? colors.lightBlue : colors.white}
+                borderWidth={4}
+                borderColor={colors.blue}
+                style={{ transform: [{ scale: isPressed ? 0.95 : 1 }] }}
+              >
+                <Box _text={styles.circleTitle}>Account balance</Box>
+                <Box _text={styles.circleDesc}>120.00 PLN</Box>
+              </Circle>
+            )
+          }}
+        </Pressable>
+        <Pressable>
+          {({ isPressed }) => {
+            return (
+              <Circle
+                size={160}
+                bg={isPressed ? colors.lightBlue : colors.white}
+                borderWidth={4}
+                borderColor={colors.blue}
+                style={{ transform: [{ scale: isPressed ? 0.95 : 1 }] }}
+              >
+                <Box _text={styles.circleTitle}>Savings</Box>
+                <Box _text={styles.circleDesc}>50.00 PLN</Box>
+              </Circle>
+            )
+          }}
+        </Pressable>
+      </Row>
+      <Pressable>
+        {({ isPressed }) => {
+          return (
+            <Circle
+              size={150}
+              bg={isPressed ? colors.lightBlue : colors.white}
+              borderWidth={4}
+              borderColor={colors.blue}
+              style={{ transform: [{ scale: isPressed ? 0.95 : 1 }] }}
+            >
+              <Box _text={styles.circleTitle}>Credit cards</Box>
+              <Box _text={styles.circleDesc}>2</Box>
+            </Circle>
+          )
+        }}
+      </Pressable>
+      <Text style={styles.overallBalanceTitle}>
+        You have <Text style={styles.overallBalance}>170.00 PLN</Text>
+      </Text>
+    </Row>
+  )
+}
 
 const styles = StyleSheet.create({
   root: {
@@ -13,87 +72,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.lightGrayPurple,
   },
-  title: {
+  overallBalanceTitle: {
     fontSize: 24,
-    marginBottom: 10,
+    marginTop: 30,
+  },
+  overallBalance: {
+    color: colors.gray,
+  },
+  circleTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  circleDesc: {
+    fontSize: 20,
+    color: colors.gray,
   },
 })
-
-const Home = ({ navigation }) => (
-  <Row style={styles.root}>
-    <Row space="md">
-      <Circle size={180} bg="blue.400">
-        <Box
-          _text={{
-            fontWeight: 'bold',
-            fontSize: '2xl',
-            color: 'white',
-          }}
-        >
-          Account balance
-        </Box>
-        <Box
-          _text={{
-            fontWeight: 'bold',
-            fontSize: 'xl',
-            color: 'white',
-          }}
-        >
-          120,00 PLN
-        </Box>
-      </Circle>
-      <Circle size={160} bg="green.500">
-        <Box
-          _text={{
-            fontWeight: 'bold',
-            fontSize: '2xl',
-            color: 'white',
-          }}
-        >
-          Savings
-        </Box>
-        <Box
-          _text={{
-            fontWeight: 'bold',
-            fontSize: 'xl',
-            color: 'white',
-          }}
-        >
-          50,00 PLN
-        </Box>
-      </Circle>
-    </Row>
-    <Circle size={150} bg="amber.400">
-      <Box
-        _text={{
-          fontWeight: 'bold',
-          fontSize: '2xl',
-          color: 'white',
-        }}
-      >
-        Credit cards
-      </Box>
-      <Box
-        _text={{
-          fontWeight: 'bold',
-          fontSize: 'xl',
-          color: 'white',
-        }}
-      >
-        2
-      </Box>
-    </Circle>
-    <Text style={styles.title}>Home</Text>
-    <Button
-      title="Go to Details"
-      color="white"
-      backgroundColor={colors.lightPurple}
-      onPress={() => {
-        navigation.navigate('Details', { from: 'Home' })
-      }}
-    />
-  </Row>
-)
 
 Home.propTypes = {
   navigation: PropTypes.shape({
