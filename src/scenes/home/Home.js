@@ -3,12 +3,19 @@ import PropTypes from 'prop-types'
 import { StyleSheet, Text } from 'react-native'
 import { colors } from 'theme'
 import { Pressable, Row, Circle, Box } from 'native-base'
+import FontIcon from 'react-native-vector-icons/FontAwesome5'
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, route }) => {
   return (
     <Row style={styles.root}>
       <Row space="md">
-        <Pressable>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Details', {
+              from: route.name,
+            })
+          }}
+        >
           {({ isPressed }) => {
             return (
               <Circle
@@ -18,13 +25,22 @@ const Home = ({ navigation }) => {
                 borderColor={colors.blue}
                 style={{ transform: [{ scale: isPressed ? 0.95 : 1 }] }}
               >
-                <Box _text={styles.circleTitle}>Account balance</Box>
+                <Box>
+                  <FontIcon size={20} name="wallet"></FontIcon>
+                </Box>
+                <Box _text={styles.circleTitle}>Konta</Box>
                 <Box _text={styles.circleDesc}>120.00 PLN</Box>
               </Circle>
             )
           }}
         </Pressable>
-        <Pressable>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Details', {
+              from: route.name,
+            })
+          }}
+        >
           {({ isPressed }) => {
             return (
               <Circle
@@ -34,14 +50,23 @@ const Home = ({ navigation }) => {
                 borderColor={colors.blue}
                 style={{ transform: [{ scale: isPressed ? 0.95 : 1 }] }}
               >
-                <Box _text={styles.circleTitle}>Savings</Box>
+                <Box>
+                  <FontIcon size={20} name="piggy-bank"></FontIcon>
+                </Box>
+                <Box _text={styles.circleTitle}>Oszczędności</Box>
                 <Box _text={styles.circleDesc}>50.00 PLN</Box>
               </Circle>
             )
           }}
         </Pressable>
       </Row>
-      <Pressable>
+      <Pressable
+        onPress={() => {
+          navigation.navigate('Details', {
+            from: route.name,
+          })
+        }}
+      >
         {({ isPressed }) => {
           return (
             <Circle
@@ -51,14 +76,17 @@ const Home = ({ navigation }) => {
               borderColor={colors.blue}
               style={{ transform: [{ scale: isPressed ? 0.95 : 1 }] }}
             >
-              <Box _text={styles.circleTitle}>Credit cards</Box>
+              <Box>
+                <FontIcon size={20} name="credit-card"></FontIcon>
+              </Box>
+              <Box _text={styles.circleTitle}>Karty</Box>
               <Box _text={styles.circleDesc}>2</Box>
             </Circle>
           )
         }}
       </Pressable>
       <Text style={styles.overallBalanceTitle}>
-        You have <Text style={styles.overallBalance}>170.00 PLN</Text>
+        Razem <Text style={styles.overallBalance}>170.00 PLN</Text>
       </Text>
     </Row>
   )
