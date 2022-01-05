@@ -5,12 +5,8 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer'
 import DrawerMenu from './DrawerMenu'
-import {
-  HomeStackNavigator,
-  ProfileStackNavigator,
-  HistoryStackNavigator,
-} from '../stacks'
-import { HomeTabNavigator } from '../tabs'
+import RootTabNavigator from '../tabs/Tabs'
+import Login from '../../../scenes/login'
 
 const Drawer = createDrawerNavigator()
 
@@ -27,9 +23,26 @@ const DrawerMenuContainer = (props) => {
 
 const DrawerNavigator = () => (
   <Drawer.Navigator initialRouteName="Home" drawerContent={DrawerMenuContainer}>
-    <Drawer.Screen name="Home" component={HomeTabNavigator} />
-    <Drawer.Screen name="History" component={HomeTabNavigator} />
-    <Drawer.Screen name="Profile" component={ProfileStackNavigator} />
+    <Drawer.Screen
+      name="Home"
+      component={RootTabNavigator}
+      options={{ title: 'Start' }}
+    />
+    <Drawer.Screen
+      name="History"
+      component={RootTabNavigator}
+      options={{ title: 'Historia' }}
+    />
+    <Drawer.Screen
+      name="Profile"
+      component={RootTabNavigator}
+      options={{ title: 'Profil' }}
+    />
+    <Drawer.Screen
+      name="Login"
+      component={Login}
+      options={{ title: 'Login' }}
+    />
   </Drawer.Navigator>
 )
 

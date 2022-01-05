@@ -1,15 +1,12 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { colors } from 'theme'
-import Details from 'scenes/details'
 import HeaderLeft from './HeaderLeft'
 import HeaderTitle from './HeaderTitle'
 import Home from 'scenes/home'
 import Profile from 'scenes/profile'
 import History from 'scenes/history'
-
-// tab navigators
-import { HomeTabNavigator, ProfileTabNavigator } from '../tabs'
+import Details from 'scenes/details'
 
 // ------------------------------------
 // Constants
@@ -85,7 +82,7 @@ export const ProfileStackNavigator = () => (
   >
     <Stack.Screen
       name="Profile"
-      component={ProfileTabNavigator}
+      component={Profile}
       options={({ navigation }) => ({
         title: 'Profile',
         headerLeft: () => <HeaderLeft navigation={navigation} />,

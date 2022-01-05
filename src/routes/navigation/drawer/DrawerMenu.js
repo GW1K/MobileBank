@@ -22,6 +22,10 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  mainHeader: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
 }
 
 const DrawerMenu = (props) => (
@@ -29,16 +33,19 @@ const DrawerMenu = (props) => (
     <View style={styles.head}>
       <FontIcon.Button
         name="times"
+        style={{ paddingHorizontal: 10 }}
+        iconStyle={{ margin: 0 }}
         size={20}
         color={colors.gray}
-        backgroundColor="white"
+        backgroundColor={colors.white}
+        borderRadius={0}
         onPress={() => {
           props.navigation.dispatch(DrawerActions.closeDrawer())
         }}
       />
     </View>
     <View style={styles.main}>
-      <Text>Main menu</Text>
+      <Text style={styles.mainHeader}>Menu główne</Text>
     </View>
   </SafeAreaView>
 )
