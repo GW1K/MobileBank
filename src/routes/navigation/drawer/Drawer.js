@@ -43,6 +43,11 @@ const DrawerNavigator = () => (
       component={Login}
       options={{ title: 'Login' }}
     />
+    <Drawer.Screen
+      name="blik"
+      component={blik}
+      options={{ title: 'BLIK' }}
+    />
   </Drawer.Navigator>
 )
 
