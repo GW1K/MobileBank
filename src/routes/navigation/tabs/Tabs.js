@@ -8,7 +8,7 @@ import { colors } from 'theme'
 import {
   HomeStackNavigator,
   HistoryStackNavigator,
-  ProfileStackNavigator,
+  TransfersStackNavigator,
 } from '../stacks'
 
 // ------------------------------------
@@ -56,10 +56,10 @@ const BottomTabNavigator = () => (
                 solid
               />
             )
-          case 'Profile':
+          case 'Transfers':
             return (
               <FontIcon
-                name="user"
+                name="wallet"
                 color={focused ? colors.lightPurple : colors.gray}
                 size={20}
                 solid
@@ -85,9 +85,9 @@ const BottomTabNavigator = () => (
       options={{ title: 'Histora' }}
     />
     <Tab.Screen
-      name="Profile"
-      component={ProfileStackNavigator}
-      options={{ title: 'Profil' }}
+      name="Transfers"
+      component={TransfersStackNavigator}
+      options={{ title: 'Płatności' }}
     />
   </Tab.Navigator>
 )

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
@@ -15,7 +15,10 @@ import {
   HStack,
   VStack,
   Spacer,
+  Spinner,
 } from 'native-base'
+import { firestore } from '../../../config/firebase'
+import { collection, getDocs } from 'firebase/firestore'
 
 const styles = StyleSheet.create({
   root: {
@@ -26,79 +29,81 @@ const styles = StyleSheet.create({
   },
 })
 
-const data = [
-  {
-    id: '1',
-    date: '30.04.2021',
-    category: 'Przychód',
-    amount: '3000,00 PLN',
-    title: 'Wynagrodzenie za miesiąc kwiecień 2021',
-    account: 'Konto Oszczędnościowe',
-    payerAccount: '45 2344',
-    payerName: 'Firma XYZ',
-    payerAddress: 'ul.Wojska Polskiego 1,Warszawa',
-    recipientAccount: '28 9399',
-    recipientName: 'Adam Kowalski',
-    recipientAddress: 'ul.Kowalska 1,Warszawa',
-  },
-  {
-    id: '2',
-    date: '01.05.2021',
-    category: 'Przychód',
-    amount: '0.20 PLN',
-    title: 'Naliczone odsetki',
-    account: 'Konto Oszczędnościowe',
-    payerAccount: '53 2723',
-    payerName: 'MobileBank',
-    payerAddress: 'ul.Krakowska 5,Kraków',
-    recipientAccount: '28 9399',
-    recipientName: 'Adam Kowalski',
-    recipientAddress: 'ul.Kowalska 1,Warszawa',
-  },
-  {
-    id: '3',
-    date: '01.05.2021',
-    category: 'Finanse',
-    amount: '-0.05 PLN',
-    title: 'Podatek od odsetek',
-    account: 'Konto Oszczędnościowe',
-    payerAccount: '28 9399',
-    payerName: 'Adam Kowalski',
-    payerAddress: 'ul.Kowalska 1,Warszawa',
-    recipientAccount: '53 2723',
-    recipientName: 'MobileBank',
-    recipientAddress: 'ul.Krakowska 5,Kraków',
-  },
-  {
-    id: '4',
-    date: '05.05.2021',
-    category: 'Dom i rachunki',
-    amount: '-1000,00 PLN',
-    title: 'Opłata za telefon',
-    account: 'Konto Student',
-    payerAccount: '28 9374',
-    payerName: 'Adam Kowalski',
-    payerAddress: 'ul.Kowalska 1,Warszawa',
-    recipientAccount: '34 2384',
-    recipientName: 'Telefonia S.A.',
-    recipientAddress: 'ul.Zagórska 5,Warszawa',
-  },
-]
-
-const getCategoryIconName = (category) => {
-  switch (category) {
-    case 'Przychód':
-      return 'dollar-sign'
-    case 'Finanse':
-      return 'coins'
-    case 'Dom i rachunki':
-      return 'house-user'
-  }
-}
-
 const History = ({ navigation, route }) => {
+  const getCategoryIconName = (category) => {
+    switch (category) {
+      case 'Przychód':
+        return 'dollar-sign'
+      case 'Finanse':
+        return 'coins'
+      case 'Dom i rachunki':
+        return 'house-user'
+    }
+  }
+
+  const isDateBetween = (from, curr, to) => {
+    let fromTmp = new Date(from)
+    let currTmp = new Date(curr)
+    let toTmp = new Date(to)
+    return currTmp >= fromTmp && currTmp <= toTmp
+  }
+
+  const currentMonthFilter = (date) => {
+    let dateTmp = String(date).split('.')
+    let currentDate = new Date()
+    return isDateBetween(
+      Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1),
+      Date.UTC(dateTmp[2], dateTmp[1] - 1, dateTmp[0]),
+      Date.UTC(currentDate.getFullYear(), currentDate.getMonth() + 1, 0),
+    )
+  }
+
+  const lastMonthFilter = (date) => {
+    let dateTmp = String(date).split('.')
+    let currentDate = new Date()
+    return isDateBetween(
+      Date.UTC(currentDate.getFullYear(), currentDate.getMonth() - 1, 1),
+      Date.UTC(dateTmp[2], dateTmp[1] - 1, dateTmp[0]),
+      Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 0),
+    )
+  }
+
+  const getTransfers = async () => {
+    const transfersRef = collection(firestore, 'transfers')
+    const querySnapshot = await getDocs(transfersRef)
+    let result = []
+    querySnapshot.forEach((doc) => {
+      result.push({ id: doc.id, ...doc.data() })
+    })
+    if (account != 'all') {
+      result = result.filter((t) => t.account == account)
+    }
+    if (period == 'curr-month') {
+      result = result.filter((t) => currentMonthFilter(t.date))
+    } else if (period == 'prev-month') {
+      result = result.filter((t) => lastMonthFilter(t.date))
+    }
+    return result
+  }
+
   const [account, setAccount] = useState('all')
   const [period, setPeriod] = useState('curr-month')
+  const [isLoading, setLoading] = useState(true)
+  const [transfers, setTransfers] = useState([])
+
+  useEffect(() => {
+    getTransfers()
+      .then((result) => {
+        setTransfers(result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [account, period])
+
   return (
     <Row style={styles.root}>
       <Heading mt={5}>Historia transakcji</Heading>
@@ -117,11 +122,14 @@ const History = ({ navigation, route }) => {
         dropdownIcon={<ChevronDownIcon size="6" />}
         dropdownOpenIcon={<ChevronUpIcon size="6" />}
         dropdownCloseIcon={<ChevronDownIcon size="6" />}
-        onValueChange={(itemValue) => setAccount(itemValue)}
+        onValueChange={(account) => setAccount(account)}
       >
         <Select.Item label="Wszystkie konta" value="all" />
-        <Select.Item label="Konto Student" value="main" />
-        <Select.Item label="Konto Oszczędnościowe" value="savings" />
+        <Select.Item label="Konto Student" value="Konto Student" />
+        <Select.Item
+          label="Konto Oszczędnościowe"
+          value="Konto Oszczędnościowe"
+        />
       </Select>
       <Select
         mt={2}
@@ -138,52 +146,57 @@ const History = ({ navigation, route }) => {
         dropdownIcon={<ChevronDownIcon size="6" />}
         dropdownOpenIcon={<ChevronUpIcon size="6" />}
         dropdownCloseIcon={<ChevronDownIcon size="6" />}
-        onValueChange={(itemValue) => setPeriod(itemValue)}
+        onValueChange={(period) => setPeriod(period)}
       >
         <Select.Item label="Bieżący miesiąc" value="curr-month" />
         <Select.Item label="Poprzedni miesiąc" value="prev-month" />
-        <Select.Item label="Ostatnie 6 miesięcy" value="half-year" />
       </Select>
-      <FlatList
-        mt="4"
-        w="100%"
-        data={data}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Details', {
-                transaction: item,
-                from: route.name,
-              })
-            }}
-          >
-            <Box
-              borderBottomWidth="1"
-              _dark={{
-                borderColor: colors.gray,
+      {isLoading ? (
+        <Box mt={20}>
+          <Spinner color={colors.lightPurple} size={'lg'} />
+        </Box>
+      ) : (
+        <FlatList
+          mt="4"
+          w="100%"
+          data={transfers}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Details', {
+                  transfer: item,
+                  from: route.name,
+                })
               }}
-              borderColor="coolGray.200"
-              p="4"
             >
-              <HStack>
-                <FontIcon
-                  name={getCategoryIconName(item.category)}
-                  size={30}
-                ></FontIcon>
-                <VStack flexShrink="1" alignItems="flex-start" ml="4">
-                  <Text>{item.date}</Text>
-                  <Text>{item.category}</Text>
-                  <Heading size="sm">{item.title}</Heading>
-                  <Text>{item.account}</Text>
-                </VStack>
-                <Spacer />
-                <Heading size="sm">{item.amount}</Heading>
-              </HStack>
-            </Box>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.id}
-      />
+              <Box
+                borderBottomWidth="1"
+                _dark={{
+                  borderColor: colors.gray,
+                }}
+                borderColor="coolGray.200"
+                p="4"
+              >
+                <HStack>
+                  <FontIcon
+                    name={getCategoryIconName(item.category)}
+                    size={30}
+                  ></FontIcon>
+                  <VStack flexShrink="1" alignItems="flex-start" ml="4">
+                    <Text>{item.date}</Text>
+                    <Text>{item.category}</Text>
+                    <Heading size="sm">{item.title}</Heading>
+                    <Text>{item.account}</Text>
+                  </VStack>
+                  <Spacer />
+                  <Heading size="sm">{item.amount}</Heading>
+                </HStack>
+              </Box>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(transfer) => transfer.id}
+        />
+      )}
     </Row>
   )
 }

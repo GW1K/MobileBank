@@ -7,6 +7,7 @@ import Home from 'scenes/home'
 import Profile from 'scenes/profile'
 import History from 'scenes/history'
 import Details from 'scenes/details'
+import Transfers from 'scenes/transfers'
 
 // ------------------------------------
 // Constants
@@ -85,6 +86,31 @@ export const ProfileStackNavigator = () => (
       component={Profile}
       options={({ navigation }) => ({
         title: 'Profile',
+        headerLeft: () => <HeaderLeft navigation={navigation} />,
+        headerTitle: () => <HeaderTitle />,
+      })}
+    />
+    <Stack.Screen
+      name="Details"
+      component={Details}
+      options={{
+        title: 'Details',
+      }}
+    />
+  </Stack.Navigator>
+)
+
+export const TransfersStackNavigator = () => (
+  <Stack.Navigator
+    initialRouteName="Transfers"
+    headerMode="screen"
+    screenOptions={navigationProps}
+  >
+    <Stack.Screen
+      name="Transfers"
+      component={Transfers}
+      options={({ navigation }) => ({
+        title: 'Płatności',
         headerLeft: () => <HeaderLeft navigation={navigation} />,
         headerTitle: () => <HeaderTitle />,
       })}

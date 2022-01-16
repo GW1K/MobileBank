@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import Button from 'components/Button'
@@ -7,7 +7,7 @@ import { colors } from 'theme'
 import HeaderTitle from '../../routes/navigation/stacks/HeaderTitle'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { auth } from '../../../config/firebase'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 const styles = StyleSheet.create({
   root: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.lightGrayPurple,
   },
-  signupbutton: {
+  signinbutton: {
     marginTop: 10,
     backgroundColor: colors.white,
     borderWidth: 2,
@@ -25,24 +25,16 @@ const styles = StyleSheet.create({
   },
 })
 
-const Login = ({ navigation }) => {
+const Signup = ({ navigation }) => {
+  const [username, setUsername] = useState(false)
   const [email, setEmail] = useState(false)
   const [password, setPassword] = useState(false)
   const [togglePassword, setTogglePassword] = useState(false)
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.navigate('Home')
-      }
-    })
-    return unsubscribe
-  }, [])
-
   const handleClick = () => setTogglePassword(!togglePassword)
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
+  const signUp = () => {
+    createUserWithEmailAndPassword(auth, email, password)
   }
 
   return (
@@ -53,10 +45,24 @@ const Login = ({ navigation }) => {
         </Box>
         <Input
           mt="5"
-          placeholder="Email"
+          placeholder="Nazwa użytkownika"
           InputRightElement={
             <Icon
               as={<FontIcon name="user"></FontIcon>}
+              size={25}
+              mr={2}
+            ></Icon>
+          }
+          onChangeText={(v) => {
+            setUsername(v)
+          }}
+        ></Input>
+        <Input
+          mt="3"
+          placeholder="Email"
+          InputRightElement={
+            <Icon
+              as={<FontIcon name="envelope"></FontIcon>}
               size={25}
               mr={2}
             ></Icon>
@@ -89,20 +95,21 @@ const Login = ({ navigation }) => {
         />
         <Button
           textStyle={{ fontSize: 18 }}
-          title="Zaloguj"
+          title="Zarejestruj się"
           color={colors.lightBlue}
           backgroundColor={colors.blue}
           onPress={() => {
-            handleLogin()
+            signUp()
+            navigation.navigate('Login')
           }}
         />
         <Button
-          style={styles.signupbutton}
+          style={styles.signinbutton}
           textStyle={{ fontSize: 18 }}
-          title="Zarejestruj się"
+          title="Zaloguj się"
           color={colors.blue}
           onPress={() => {
-            navigation.navigate('Signup')
+            navigation.navigate('Login')
           }}
         />
       </VStack>
@@ -110,12 +117,12 @@ const Login = ({ navigation }) => {
   )
 }
 
-Login.propTypes = {
+Signup.propTypes = {
   navigation: PropTypes.shape({ navigate: PropTypes.func }),
 }
 
-Login.defaultProps = {
+Signup.defaultProps = {
   navigation: { navigate: () => null },
 }
 
-export default Login
+export default Signup

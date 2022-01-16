@@ -7,6 +7,8 @@ import {
 import DrawerMenu from './DrawerMenu'
 import RootTabNavigator from '../tabs/Tabs'
 import Login from '../../../scenes/login'
+import { ProfileStackNavigator } from '../stacks'
+import Signup from '../../../scenes/signin/Signup'
 
 const Drawer = createDrawerNavigator()
 
@@ -22,20 +24,18 @@ const DrawerMenuContainer = (props) => {
 }
 
 const DrawerNavigator = () => (
-  <Drawer.Navigator initialRouteName="Home" drawerContent={DrawerMenuContainer}>
+  <Drawer.Navigator
+    initialRouteName="Login"
+    drawerContent={DrawerMenuContainer}
+  >
     <Drawer.Screen
       name="Home"
       component={RootTabNavigator}
       options={{ title: 'Start' }}
     />
     <Drawer.Screen
-      name="History"
-      component={RootTabNavigator}
-      options={{ title: 'Historia' }}
-    />
-    <Drawer.Screen
       name="Profile"
-      component={RootTabNavigator}
+      component={ProfileStackNavigator}
       options={{ title: 'Profil' }}
     />
     <Drawer.Screen
@@ -43,11 +43,16 @@ const DrawerNavigator = () => (
       component={Login}
       options={{ title: 'Login' }}
     />
-    /*<Drawer.Screen
+    <Drawer.Screen
+      name="Signup"
+      component={Signup}
+      options={{ title: 'Signup' }}
+    />
+    {/* <Drawer.Screen
       name="blik"
       component={blik}
       options={{ title: 'BLIK' }}
-    />*/
+    /> */}
   </Drawer.Navigator>
 )
 
