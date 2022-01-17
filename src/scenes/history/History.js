@@ -17,8 +17,8 @@ import {
   Spacer,
   Spinner,
 } from 'native-base'
-import { firestore } from '../../../config/firebase'
-import { collection, getDocs } from 'firebase/firestore'
+import { auth, firestore } from '../../../config/firebase'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 
 const styles = StyleSheet.create({
   root: {
@@ -70,7 +70,9 @@ const History = ({ navigation, route }) => {
 
   const getTransfers = async () => {
     const transfersRef = collection(firestore, 'transfers')
-    const querySnapshot = await getDocs(transfersRef)
+    const querySnapshot = await getDocs(
+      query(transfersRef, where('uid', '==', auth.currentUser.uid)),
+    )
     let result = []
     querySnapshot.forEach((doc) => {
       result.push({ id: doc.id, ...doc.data() })
@@ -92,6 +94,18 @@ const History = ({ navigation, route }) => {
   const [transfers, setTransfers] = useState([])
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getTransfers()
+        .then((result) => {
+          setTransfers(result)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    })
     getTransfers()
       .then((result) => {
         setTransfers(result)
@@ -102,7 +116,8 @@ const History = ({ navigation, route }) => {
       .finally(() => {
         setLoading(false)
       })
-  }, [account, period])
+    return unsubscribe
+  }, [navigation, account, period])
 
   return (
     <Row style={styles.root}>
@@ -163,9 +178,8 @@ const History = ({ navigation, route }) => {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Details', {
+                navigation.navigate('TransferDetails', {
                   transfer: item,
-                  from: route.name,
                 })
               }}
             >

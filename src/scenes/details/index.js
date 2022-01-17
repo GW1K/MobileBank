@@ -1,3 +1,3 @@
-import Details from './Details'
+import TransferDetails from './TransferDetails'
 
-export default Details
+export default TransferDetails

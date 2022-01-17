@@ -66,10 +66,10 @@ export const HistoryStackNavigator = () => (
       })}
     />
     <Stack.Screen
-      name="Details"
+      name="TransferDetails"
       component={Details}
       options={{
-        title: 'Details',
+        title: 'Szczegóły płatności',
       }}
     />
   </Stack.Navigator>

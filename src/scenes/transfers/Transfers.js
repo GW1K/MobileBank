@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, Text, View, StatusBar } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import { colors } from 'theme'
 import Button from 'components/Button'
 import {
@@ -21,7 +21,7 @@ import {
   CloseIcon,
   Collapse,
 } from 'native-base'
-import { firestore } from '../../../config/firebase'
+import { auth, firestore } from '../../../config/firebase'
 import { collection, setDoc, doc } from 'firebase/firestore'
 
 const styles = StyleSheet.create({
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '98%',
     fontSize: 15,
+    backgroundColor: colors.white,
   },
   button: {
     marginTop: 15,
@@ -73,6 +74,7 @@ const Transfers = ({ navigation }) => {
       '.' +
       ('0000' + currentDate.getFullYear()).slice(-4)
     await setDoc(doc(transfersRef, Date.now().toString()), {
+      uid: auth.currentUser.uid,
       account: account,
       amount: amount,
       category: 'Finanse',
@@ -129,7 +131,7 @@ const Transfers = ({ navigation }) => {
           />
         </Select>
         <Text style={styles.title}>Dane odbiorcy:</Text>
-        <Box alignItems="flex-start" w="95%">
+        <Box alignItems="flex-start" w="90%">
           <Text>Numer rachunku:</Text>
           <Input
             style={styles.input}
@@ -153,7 +155,7 @@ const Transfers = ({ navigation }) => {
           <Text>Kwota:</Text>
           <Input
             style={styles.input}
-            onChangeText={(v) => setAmount(v)}
+            onChangeText={(v) => setAmount('-' + v)}
           ></Input>
         </Box>
         {status ? (
