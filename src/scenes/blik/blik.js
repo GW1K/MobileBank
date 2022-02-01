@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import {
   StyleSheet, Text, View, StatusBar, Button
@@ -21,19 +21,32 @@ const styles = StyleSheet.create({
 
 const Blik = ({ navigation }) => {
 
-    generateRandomNumber = () => {
+    const [randomNumber, setRandomNumber] = useState(0)
 
-        const randomNumber = Math.floor(Math.random() * 999999) + 100000 ;
+    const generateRandomNumber = () => {
+
+        setRandomNumber(Math.floor(Math.random() * 999999) + 100000);
 
     }
-    
+
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
       <Text style={styles.title}>BLIK</Text>
-      <Button title="Generuj nowy kod BLIK" onPress={ generateRandomNumber() } />
+      <Text style={styles.title}>{randomNumber}</Text>
+      <Button title="Generuj nowy kod BLIK" onPress={ generateRandomNumber } />
     </View>
   )
+}
+
+Blik.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+  }),
+}
+
+Blik.defaultProps = {
+  navigation: { navigate: () => null },
 }
 
 export default Blik
