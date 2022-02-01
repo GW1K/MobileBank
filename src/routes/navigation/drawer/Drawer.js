@@ -51,11 +51,11 @@ const DrawerNavigator = () => (
       component={Signup}
       options={{ title: 'Signup' }}
     />
-    {/* <Drawer.Screen
+    <Drawer.Screen
       name="blik"
-      component={blik}
+      component={Blik}
       options={{ title: 'BLIK' }}
-    /> */}
+    />
   </Drawer.Navigator>
 )
 
