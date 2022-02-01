@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import {
   StyleSheet, Text, View, StatusBar, Button
 } from 'react-native'
-import Button from 'components/Button'
 import { colors } from 'theme'
 
 const styles = StyleSheet.create({
@@ -20,24 +19,21 @@ const styles = StyleSheet.create({
   },
 })
 
-const Home = ({ navigation }) => (
+const Blik = ({ navigation }) => {
 
-    /*GenerateRandomNumber=()=>
-    {
+    generateRandomNumber = () => {
 
-        RandomNumber = Math.floor(Math.random() * 100) + 1 ;
+        const randomNumber = Math.floor(Math.random() * 999999) + 100000 ;
 
-        setState({
+    }
+    
+  return (
+    <View style={styles.root}>
+      <StatusBar barStyle="light-content" />
+      <Text style={styles.title}>BLIK</Text>
+      <Button title="Generuj nowy kod BLIK" onPress={ generateRandomNumber() } />
+    </View>
+  )
+}
 
-            NumberHolder : RandomNumber
-
-        })
-}*/
-  <View style={styles.root}>
-    <StatusBar barStyle="light-content" />
-    <Text style={styles.title}>BLIK</Text>
-    <Button title="Generuj kod BLIK" onPress={/*GenerateRandomNumber*/} />
-  </View>
-)
-
-export default blik
+export default Blik
