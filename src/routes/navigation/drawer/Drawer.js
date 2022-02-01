@@ -9,6 +9,7 @@ import RootTabNavigator from '../tabs/Tabs'
 import Login from '../../../scenes/login'
 import { ProfileStackNavigator } from '../stacks'
 import Signup from '../../../scenes/signin/Signup'
+import Blik from '../../../scenes/blik'
 
 const Drawer = createDrawerNavigator()
 
