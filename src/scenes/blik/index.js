@@ -1,3 +1,3 @@
-import Details from './blik'
+import Blik from './blik'
 
 export default Blik

@@ -70,7 +70,7 @@ const Transfers = ({ navigation }) => {
     const formattedDate =
       ('00' + currentDate.getDate()).slice(-2) +
       '.' +
-      ('00' + currentDate.getMonth() + 1).slice(-2) +
+      ('00' + (currentDate.getMonth() + 1)).slice(-2) +
       '.' +
       ('0000' + currentDate.getFullYear()).slice(-4)
     await setDoc(doc(transfersRef, Date.now().toString()), {
